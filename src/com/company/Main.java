@@ -1,33 +1,38 @@
 package com.company;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
-// note to self: figure out how to store all the book details, how to do 2D arrays using ArrayList
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
 
-        //System.out.println(getBookTitle());
-        //System.out.println(getISBN());
-        //System.out.println(getAuthor());
-        //System.out.println(getGenre());
-
-        //ArrayList<String> array = new ArrayList<>();
-        //array.add(getBookTitle());
-        //array.add(getISBN());
-        //array.add(getAuthor());
-        //array.add(getGenre());
-        //System.out.println("Your book is: " + array);
+        file(); // creates/checks file
 
         ArrayList<String> array = new ArrayList<>();
-        String title = getBookTitle();
-        String ISBN = getISBN();
-        String author = getAuthor();
-        String genre = getGenre();
-        String book = title+", "+ISBN+", "+author+", "+genre;
-        System.out.println("Your book is: " + book);
-        array.add(book);
+
+        for (int i = 0;i < 2; i++) {
+
+            String title = getBookTitle();
+            String ISBN = getISBN();
+            String author = getAuthor();
+            String genre = getGenre();
+
+            String book = title + ", " + ISBN + ", " + author + ", " + genre + "\n";
+            System.out.println("Your book is: " + book);
+            array.add(book);
+            System.out.println(i); // to check what i currently is
+            System.out.println(array.get(i));
+
+            writeToFile(book);
+        }
+        System.out.println("should print contents of file now");
+        readFile();
+
     }
 
     public static String getBookTitle() {
@@ -36,7 +41,7 @@ public class Main {
         return scanner.nextLine();
     }
 
-    public static String getISBN() { // ISBN is a serial number for a book
+    public static String getISBN() { // ISBN is a like serial number for a book
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter ISBN:");
         return scanner.nextLine();
@@ -54,6 +59,46 @@ public class Main {
         return scanner.nextLine();
     }
 
+    public static void file() {
+        try {
+            File library = new File("library.txt");
+            if (library.createNewFile()) {
+                System.out.println("File created: " + library.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    } // creates/checks file
+
+    public static void writeToFile(String book) {
+        try {
+            FileWriter myWriter = new FileWriter("library.txt", true);
+            myWriter.write(book);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void readFile() {
+        try {
+            File myObj = new File("library.txt");
+            Scanner scanner = new Scanner(myObj);
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();
+                System.out.println(data);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 
 }
 
